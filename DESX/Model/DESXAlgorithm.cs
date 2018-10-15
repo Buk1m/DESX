@@ -1,14 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using DESX.ExtensionMethods;
 using DESX.Utility;
 
 namespace DESX.Model
 {
-    public class DESXAlgorithm
+    public static class DESXAlgorithm
     {
         public static string Encrypt(string message, List<string> keys)
         {
