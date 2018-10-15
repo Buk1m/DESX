@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DESX.Utility
 {
@@ -44,11 +42,10 @@ namespace DESX.Utility
             return ret;
         }
 
-
         public static List<BitArray> StringToBitArrays(string message)
         {
             List<byte> bytes = StringToBytes(message);
-            return Converters.BytesTo64BitArrays(bytes);
+            return BytesTo64BitArrays(bytes);
         }
 
         public static string BitArraysToString(List<BitArray> bitArrays)
@@ -56,10 +53,16 @@ namespace DESX.Utility
             string message = "";
             bitArrays.ForEach(array =>
             {
-                var bytes = Converters.BitArrayToBytes(array);
+                var bytes = BitArrayToBytes(array);
                 message += BytesToString(bytes);
             });
             return message;
+        }
+
+        public static string BitArrayToString(BitArray bitArray)
+        {
+            var bytes = BitArrayToBytes(bitArray);
+            return BytesToString(bytes);
         }
     }
 }

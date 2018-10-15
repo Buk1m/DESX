@@ -1,9 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 using DESX.Model;
+using DESX.Utility;
 using Microsoft.Win32;
 using ModemTalking.Commands;
 
@@ -11,6 +12,8 @@ namespace DESX.ViewModel
 {
     public class MainViewModel : BaseViewModel
     {
+
+        #region Constructor
         public MainViewModel()
         {
             OpenMessageFile = new RelayCommand(() =>
@@ -53,6 +56,7 @@ namespace DESX.ViewModel
                 var keys = new string[] {FirstKey, SecondKey, ThirdKey}.ToList();
                 ResultMessage = DESXAlgorithm.Encrypt(MessageTextBox, keys);
             });
+
             Decrypt = new RelayCommand(() =>
             {
                 if (string.IsNullOrEmpty(MessageTextBox) || string.IsNullOrEmpty(FirstKey) ||
@@ -63,9 +67,23 @@ namespace DESX.ViewModel
                 }
 
                 var keys = new string[] {FirstKey, SecondKey, ThirdKey}.ToList();
-                ResultMessage = DESXAlgorithm.Decrypt(ResultMessage, keys);
+                ResultMessage = DESXAlgorithm.Decrypt(MessageTextBox, keys);
+            });
+
+            SwitchMessages = new RelayCommand(() =>
+            {
+                MessageTextBox = ResultMessage;
+                ResultMessage = String.Empty;
+            });
+
+            GenerateKeys = new RelayCommand(() =>
+            {
+                FirstKey = Converters.BitArrayToString(Operations.GenerateRandomKey());
+                SecondKey = Converters.BitArrayToString(Operations.GenerateRandomKeyWithParityBits());
+                ThirdKey = Converters.BitArrayToString(Operations.GenerateRandomKey());
             });
         }
+        #endregion
 
         #region Public Properties
 
@@ -154,6 +172,8 @@ namespace DESX.ViewModel
         public ICommand OpenKeysFile { get; set; }
         public ICommand Decrypt { get; set; }
         public ICommand Encrypt { get; set; }
+        public ICommand SwitchMessages { get; set; }
+        public ICommand GenerateKeys { get; set; }
 
         #endregion
 
@@ -168,5 +188,6 @@ namespace DESX.ViewModel
         private string _thirdKey = "";
 
         #endregion
+
     }
 }

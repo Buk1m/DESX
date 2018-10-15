@@ -7,12 +7,13 @@ namespace DESX.Utility
 {
     public static class Operations
     {
+        static readonly Random Random = new Random();
         public static void SplitBitArrayInHalf(List<BitArray> bitArrayList, out List<BitArray> leftBlocks,
             out List<BitArray> rightBlocks)
         {
             leftBlocks = new List<BitArray>();
             rightBlocks = new List<BitArray>();
-
+            
             foreach (var bitArray in bitArrayList)
             {
                 List<BitArray> halves = SplitBitArrayInHalf(bitArray);
@@ -41,26 +42,19 @@ namespace DESX.Utility
 
         public static BitArray GenerateRandomKey()
         {
-            Random random = new Random();
-
-            byte[] leftBytes = BitConverter.GetBytes(random.Next());
-            byte[] rightBytes = BitConverter.GetBytes(random.Next());
-
-            byte[] keyBytes = leftBytes.Concat(rightBytes).ToArray();
-            return new BitArray(keyBytes);
+            
+            byte[] key = new byte[8];
+            for (int i = 0; i < 8; i++)
+            {
+             key[i] = (byte)Random.Next(33,126);   
+            }
+           
+            return new BitArray(key);
         }
 
         public static BitArray GenerateRandomKeyWithParityBits()
         {
-            const int keyLengthInBytes = 8;
-            Random random = new Random();
-            byte[] key = new byte[keyLengthInBytes];
-            int left = random.Next();
-            int right = random.Next();
-            byte[] leftBytes = BitConverter.GetBytes(left);
-            byte[] rightBytes = BitConverter.GetBytes(right);
-            key = leftBytes.Concat(rightBytes).ToArray();
-            BitArray keyBits = new BitArray(key);
+            BitArray keyBits = GenerateRandomKey();
             int bitSum = 0;
             for (int i = 0; i < keyBits.Count; i++)
             {
