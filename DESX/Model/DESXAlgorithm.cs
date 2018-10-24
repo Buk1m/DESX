@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DESX.ExtensionMethods;
 using DESX.Utility;
 
@@ -28,10 +29,11 @@ namespace DESX.Model
         {
             List<BitArray> cypherBlocks = Converters.StringToBitArrays(message);
 
+            BitArray initialKey = Converters.StringToBitArrays(keys[0]).FirstOrDefault();
             cypherBlocks.ForEach(
                 block =>
                 {
-                    block = block.Xor(Converters.StringToBitArrays(keys[0])[0]);
+                    block = block.Xor(initialKey);
                     Permutate(ref block, Constants.InitialPermutationMatrix);
                 }
             );
@@ -51,10 +53,7 @@ namespace DESX.Model
 
             cypherBlocks = ConnectBlocks(leftBlocks, rightBlocks);
             cypherBlocks.ForEach(
-                block =>
-                {
-                    Permutate(ref block, Constants.FinalPermutationMatrix);
-                }
+                block => { Permutate(ref block, Constants.FinalPermutationMatrix); }
             );
             cypherBlocks.ForEach(block => block.Xor(Converters.StringToBitArrays(keys[2])[0]));
 
